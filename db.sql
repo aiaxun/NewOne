@@ -2,9 +2,22 @@ Create database if not exists `GithubCollector` DEFAULT CHARSET utf8;
 
 use GithubCollector;
 
+# this table is used to store urls prepare to visit next time started
+# if we stop the workflow, it will store the left url into this table
+# type:
+# '1': UserHomePage
+# '2': Repository Page
+# '3': Watchers Page
+# '4': Stargazers Page
+# '5': Following Page
+# '6': Followers Page
+# '7': Members Page
+# '8': People Page
+# '9': Stars repository Page
 Create table if not exists `URLVisited` (
     `id`   bigint(20) NOT NULL auto_increment PRIMARY KEY,
     `url`  varchar(255) UNIQUE NOT NULL,
+    `types` CHAR(1) NOT NULL ,
     `hashcode` varchar(40) NOT NULL,
     `visited` boolean NOT NULL
 )ENGINE='InnoDB' CHARSET=utf8;
@@ -23,7 +36,7 @@ Create table if not exists `GitHubUser` (
     `orgnizations` varchar(255)
 )ENGINE=innodb DEFAULT CHARSET=utf8;
 
-# store repositories basic message: owner and descripe
+# store repositories basic message: owner and description
 Create table if not exists `GithubRepository` (
     `id`  int(12) Not NULL auto_increment,
     `username` varchar(255) NOT NULL,
@@ -44,23 +57,6 @@ Create TABLE IF NOT EXISTS `UserRelations` (
     PRIMARY KEY (id,username,following)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-# this table is used to store urls prepare to visit next time started
-# type:
-# '1': UserHomePage
-# '2': Repository Page
-# '3': Watchers Page
-# '4': Stargazers Page
-# '5': Following Page
-# '6': Followers Page
-# '7': Members Page
-# '8': People Page
-#
-Create table if not EXISTS `toVisit` (
-    `id` int not null PRIMARY KEY ,
-    `url` VARCHAR(255) not null,
-    `types` CHAR(1) NOT NULL ,
-    `hashCode` VARCHAR(40) not NULL UNIQUE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # relations between user and repository
 # hashcode: hash(owner+"#"+repository+"#")

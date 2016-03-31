@@ -4,14 +4,17 @@
 # 
 class RelatedUser():
     def __init__(self):
-        self.userlist = []
+        self.following = []
+        self.followers = []
 
-    def add(self, username):
-        if username not in self.userlist:
-            self.userlist.append(username)
+    def add_following(self, username):
+        self.following.append(username)
 
-    def get(self):
-        return self.userlist
+    def add_followers(self, username):
+        self.followers.append(username)
 
-    def count(self):
-        return self.userlist.count()
+    def get_following(self):
+        return self.following
+
+    def get_followers(self):
+        return  self.followers

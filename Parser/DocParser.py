@@ -1,12 +1,23 @@
 #!/usr/bin/python
 #coding: utf-8
 import urllib2
-from bs4 import BeautifulSoup
+from Objs.UrlDB import *
+from Objs.DBConnector import *
 
 
 def download_document(url):
-    htmldoc = urllib2.urlopen(url).read()
-    return htmldoc
+    #global ppool
+    #ppool = create_db_pool("")
+    #udb = UrlDB(ppool)
+    #if udb.has_url(url) is True:
+    #   return "404"
+    try:
+        print "visiting ", url
+        htmldoc = urllib2.urlopen(url).read()
+        #udb.set_url_visited(url)
+        return htmldoc
+    except:
+        return "404"
 
 # method    :       parse()
 # function  :       extract username list
@@ -77,15 +88,18 @@ def parse_user_basic_information(soup):
     try:
         email = soup.find('a',"email").getText()
     except:
-        print "do not get ",username, " email"
+        #print "do not get ",username, " email"
+        pass
     try:
         jointime = soup.find('time',"join-date")['datetime']
     except:
-        print "do not get ", username, " join time"
+        #print "do not get ", username, " join time"
+        pass
     try:
         orgnizations = soup.find("div","clearfix").getText().strip()
     except:
-        print "do not get ",username, "orgnization"
+        #print "do not get ",username, "orgnization"
+        pass
 
     return {'username': username, 'fullname': fullname, 'image': imageurl, 'worksfor': worksfor, \
             'homelocation': homelocation, 'jointime': jointime, \
@@ -121,3 +135,30 @@ def parse_repository_members(soup):
         text = r.getText().replace('\n','').replace(' ','')
         userlist.append(text.split('/')[0])
     return userlist
+
+# https://github.com/orgs/OptiKey/people
+def parse_repository_people(soup):
+    tags = soup.findAll('a','member-link')
+    people = []
+    for tag in tags:
+        name = tag.attrs['href'][1:]
+        people.append(name)
+    return people
+
+def parse_repository_watchers(soup):
+    lists = soup.findAll("span","css-truncate css-truncate-target")
+    if len(lists) == 0 or not lists:
+        return []
+    watchers = []
+    for li in lists:
+        watchers.append(li.getText())
+    return watchers
+
+def parse_repository_stargazers(soup):
+    lists = soup.findAll("span", "css-truncate css-truncate-target")
+    if len(lists) == 0 or not lists:
+        return []
+    stargazers = []
+    for li in lists:
+        stargazers.append(li.getText())
+    return stargazers

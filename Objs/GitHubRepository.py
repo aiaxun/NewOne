@@ -15,6 +15,7 @@ class Repository():
         self.watchers       = []            #
         self.stargazers     = []
         self.members        = []            # visit the resource at */network/members
+        self.people         = []
         self.about          = ""            # about
         self.readme         = ""            # some repositories do not maintain Readme.me files
                                             # when we could not find <div id="readme" class="readme"> tags
@@ -23,7 +24,7 @@ class Repository():
         self.dict = {"username":        self.username, \
                      "reponame":        self.reponame, \
                      "hashCode":        self.hashCode,\
-                     "contributors":    self.contributors, \
+                     "people":          self.people, \
                      "watchers":        self.watchers, \
                      "stargazers":      self.stargazers, \
                      "members":         self.members, \
@@ -46,6 +47,9 @@ class Repository():
 
     def set_stargazers(self, stargazers):
         self.stargazers = stargazers
+
+    def set_people(self, people):
+        self.people = people
 
     def set_contributors(self, contri):
         self.contributors = contri

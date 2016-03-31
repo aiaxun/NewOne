@@ -21,6 +21,9 @@ class User():
         self.hashcode       = hash(username)
                                         # in Github, the username is different from each other
 
+    def set_username(self, username):
+        self.username = username
+
     # the content of user_dict could be collected from https://github.com/username?tab=repositories
     def set_basic_information(self, user_dict):
         self.email          = user_dict['email']
@@ -31,7 +34,7 @@ class User():
         self.worksfor       = user_dict['worksfor']
         self.orgnizations   = user_dict['orgnizations']
         self.jointime       = user_dict['jointime']
-        self.repos          = user_dict['repositories']
+        #self.repos          = user_dict['repositories']
 
     # the follow information would be collected from other related pages: star, following, followers
     #self.followers
@@ -48,12 +51,18 @@ class User():
 
     # use to get user information
     def get_followers(self):
+        if self.followers is None:
+            return []
         return self.followers
 
     def get_following(self):
+        if self.following is None:
+            return []
         return self.following
 
     def get_starred(self):
+        if self.starred is None:
+            return []
         return self.starred
 
     def get_username(self):
@@ -85,6 +94,6 @@ class User():
 # html tags <div class="org-main">... maybe easier to be found and handle
 class OrgnizationUser(User):
     def __init__(self, username):
-        User.__init__(username)
+        User.__init__(self,username)
         self.people         = []
         self.website_url    = []
